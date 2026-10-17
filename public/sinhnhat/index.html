@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Chúc mừng sinh nhật Mẹ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;height:100%;background:#2a0b3d;overflow:hidden}
+a{color:#ffd23f}a:hover{color:#ff5fa2}
+@keyframes wobble{0%,100%{transform:rotate(0)}20%{transform:rotate(-5deg)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes countPop{0%{opacity:0;transform:scale(2.4)}25%{opacity:1;transform:scale(1)}80%{opacity:1;transform:scale(.92)}100%{opacity:0;transform:scale(.6)}}
+@keyframes bigPop{0%{opacity:0;transform:scale(.2) rotate(-12deg)}60%{opacity:1;transform:scale(1.15) rotate(4deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes rise{0%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-60vh) rotate(4deg)}100%{transform:translateY(-130vh) rotate(-4deg)}}
+@keyframes flicker{0%,100%{transform:translateX(-50%) scale(1,1) rotate(-2deg)}50%{transform:translateX(-50%) scale(.9,1.12) rotate(3deg)}}
+@keyframes smoke{0%{opacity:.7;transform:translate(-50%,0) scale(.6)}100%{opacity:0;transform:translate(-50%,-70px) scale(1.8)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes sceneIn{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+<div style="position:fixed;inset:0;background:radial-gradient(120% 90% at 50% 30%, #4a1463 0%, #2a0b3d 60%, #1c0629 100%);font-family:'Be Vietnam Pro',sans-serif;color:#fff7ec;overflow:hidden;user-select:none">
+  <audio ref="{{ audioRef }}" src="music/happy-birthday.mp3" loop="{{ true }}" preload="auto"></audio>
+  <canvas ref="{{ canvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:40"></canvas>
+
+  <sc-if value="{{ isStart }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="01 Hộp quà" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;padding:24px;text-align:center;animation:sceneIn .8s ease both">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+        <div style="font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:#ffd23f;font-weight:600">Gửi mẹ yêu</div>
+        <div style="font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(32px,6vw,56px);line-height:1.1;text-wrap:pretty">Boong có một món quà cho mẹ</div>
+      </div>
+      <div onClick="{{ openGift }}" style="position:relative;width:220px;height:230px;cursor:pointer;animation:{{ giftAnim }}">
+        <div style="position:absolute;left:10px;bottom:0;width:200px;height:160px;background:#ff5fa2;border-radius:10px;box-shadow:inset 0 -14px 0 rgba(0,0,0,.12)"></div>
+        <div style="position:absolute;left:95px;bottom:0;width:30px;height:160px;background:#ffd23f"></div>
+        <div style="position:absolute;left:0;top:30px;width:220px;height:46px;transition:transform 1s cubic-bezier(.3,1.6,.5,1),opacity 1s ease;transform:{{ lidTransform }};opacity:{{ lidOpacity }}">
+          <div style="position:absolute;inset:0;background:#e8478a;border-radius:10px"></div>
+          <div style="position:absolute;left:95px;top:0;width:30px;height:46px;background:#ffd23f"></div>
+          <div style="position:absolute;left:58px;top:-44px;width:56px;height:46px;border:12px solid #ffd23f;border-radius:50% 50% 10% 50%;box-sizing:border-box;transform:rotate(-20deg)"></div>
+          <div style="position:absolute;left:106px;top:-44px;width:56px;height:46px;border:12px solid #ffd23f;border-radius:50% 50% 50% 10%;box-sizing:border-box;transform:rotate(20deg)"></div>
+        </div>
+      </div>
+      <div style="font-size:17px;color:#fff7ec;animation:pulse 1.6s ease-in-out infinite">Mẹ chạm vào hộp quà để mở nhé</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isCount3 }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(160px,30vw,300px);color:#ffd23f;text-shadow:8px 8px 0 #ff5fa2;animation:countPop 1s ease both">3</div>
+  </sc-if>
+  <sc-if value="{{ isCount2 }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(160px,30vw,300px);color:#2ec4b6;text-shadow:8px 8px 0 #ffd23f;animation:countPop 1s ease both">2</div>
+  </sc-if>
+  <sc-if value="{{ isCount1 }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(160px,30vw,300px);color:#ff5fa2;text-shadow:8px 8px 0 #2ec4b6;animation:countPop 1s ease both">1</div>
+  </sc-if>
+
+  <sc-if value="{{ isGreet }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="02 Chúc mừng" style="position:absolute;inset:0;animation:sceneIn .6s ease both">
+      <sc-for list="{{ balloons }}" as="b" hint-placeholder-count="0">
+        <div style="position:absolute;bottom:-160px;left:{{ b.left }};animation:rise {{ b.dur }} linear {{ b.delay }} infinite both">
+          <div style="width:{{ b.size }};height:{{ b.h }};background:{{ b.color }};border-radius:50% 50% 48% 52% / 58% 58% 42% 42%;box-shadow:inset -10px -12px 0 rgba(0,0,0,.12), inset 8px 8px 0 rgba(255,255,255,.25)"></div>
+          <div style="width:2px;height:90px;background:rgba(255,247,236,.5);margin:0 auto"></div>
+        </div>
+      </sc-for>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;text-align:center;z-index:2">
+        <div style="font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(44px,9vw,104px);line-height:1.05;color:#ffd23f;text-shadow:5px 5px 0 #ff5fa2;min-height:1.1em;text-wrap:balance">{{ titleText }}</div>
+        <sc-if value="{{ showAge }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div style="font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(120px,22vw,220px);line-height:.9;color:#2ec4b6;text-shadow:6px 6px 0 #fff7ec;animation:bigPop 1s cubic-bezier(.3,1.4,.5,1) both">54</div>
+            <div style="font-size:clamp(18px,2.4vw,24px);font-weight:500;animation:fadeUp .8s ease .6s both">Hôm nay mẹ tròn 54 tuổi</div>
+            <div style="font-size:16px;letter-spacing:.25em;color:#ffd23f;animation:fadeUp .8s ease 1s both">17.10.1972 — 17.10.2026</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isCake }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="03 Bánh kem" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:24px;text-align:center;animation:sceneIn .8s ease both">
+      <div style="position:relative;width:300px;height:250px;flex-shrink:0;animation:floaty 4s ease-in-out infinite">
+        <sc-for list="{{ candles }}" as="c" hint-placeholder-count="3">
+          <div style="position:absolute;left:{{ c.left }};top:20px;width:14px;height:56px;border-radius:4px;background:repeating-linear-gradient(135deg,#fff7ec 0 7px,#2ec4b6 7px 14px)">
+            <div style="position:absolute;left:50%;top:-6px;width:2px;height:8px;background:#3a2a2a;transform:translateX(-50%)"></div>
+            <sc-if value="{{ lit }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute;left:50%;top:-32px;width:16px;height:26px;background:#ffb703;border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;box-shadow:0 0 18px 6px rgba(255,200,60,.55);transform-origin:50% 100%;animation:flicker .35s ease-in-out infinite">
+                <div style="position:absolute;left:4px;bottom:3px;width:8px;height:12px;background:#fff3b0;border-radius:50%"></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ blown }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;left:50%;top:-30px;width:18px;height:18px;border-radius:50%;background:rgba(230,220,240,.6);animation:smoke 1.6s ease-out both"></div>
+            </sc-if>
+          </div>
+        </sc-for>
+        <div style="position:absolute;left:55px;top:72px;width:190px;height:68px;background:#ffd23f;border-radius:14px 14px 4px 4px;box-shadow:inset 0 -10px 0 rgba(0,0,0,.08)"></div>
+        <div style="position:absolute;left:55px;top:72px;width:190px;height:18px;background:#fff7ec;border-radius:14px 14px 10px 10px"></div>
+        <div style="position:absolute;left:20px;top:138px;width:260px;height:86px;background:#ff5fa2;border-radius:14px 14px 6px 6px;box-shadow:inset 0 -12px 0 rgba(0,0,0,.1)"></div>
+        <div style="position:absolute;left:20px;top:138px;width:260px;height:20px;background:#fff7ec;border-radius:14px 14px 12px 12px"></div>
+        <div style="position:absolute;left:0;top:218px;width:300px;height:22px;background:#b388ff;border-radius:50%"></div>
+      </div>
+      <div style="max-width:720px;display:flex;flex-direction:column;gap:16px;align-items:center;min-height:200px">
+        <sc-if value="{{ lit }}" hint-placeholder-val="{{ true }}">
+          <div style="font-family:'Baloo 2',sans-serif;font-weight:600;font-size:clamp(24px,3.6vw,36px);line-height:1.3;color:#ffd23f;text-wrap:pretty;animation:fadeUp 1s ease both">Mẹ nhắm mắt lại, ước một điều thật đẹp nhé…</div>
+        </sc-if>
+        <sc-if value="{{ blown }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:clamp(18px,2.4vw,24px);line-height:1.65;font-weight:500;text-wrap:pretty">{{ wishText }}</div>
+          <sc-if value="{{ wishDone }}" hint-placeholder-val="{{ false }}">
+            <div style="font-family:'Baloo 2',sans-serif;font-weight:800;font-size:28px;color:#ff5fa2;animation:fadeUp .8s ease both">— Boong</div>
+          </sc-if>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isPhotos }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="04 Ảnh" style="position:absolute;inset:0;background:#1c0629;animation:sceneIn 1.5s ease both">
+      <sc-for list="{{ slides }}" as="p" hint-placeholder-count="0">
+        <div style="position:absolute;inset:0;opacity:{{ p.op }};transition:opacity 2s ease;overflow:hidden">
+          <img src="{{ p.src }}" alt="" style="position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;filter:blur(36px) brightness(.55)">
+          <img src="{{ p.src }}" alt="" style="position:absolute;inset:0;margin:auto;max-width:88%;max-height:80%;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);transform:{{ p.tf }};transition:transform {{ p.zoomDur }} linear">
+        </div>
+      </sc-for>
+      <sc-if value="{{ noPhotos }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:20px;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:18px;color:#fff7ec;z-index:5">
+          <div>Thả ảnh vào thư mục photos/ để ảnh hiện ở đây.</div>
+          <label style="height:48px;padding:0 24px;display:flex;align-items:center;border-radius:24px;background:#ffd23f;color:#2a0b3d;font-weight:600;font-size:16px;cursor:pointer">Chọn thư mục ảnh<input type="file" webkitdirectory="" multiple="{{ true }}" accept="image/*" onChange="{{ pickFolder }}" style="display:none"></label>
+        </div>
+      </sc-if>
+      <div style="position:absolute;left:0;right:0;bottom:24px;display:flex;justify-content:center;padding:0 24px;z-index:3">
+        <div style="font-family:'Baloo 2',sans-serif;font-weight:600;font-size:clamp(18px,2.4vw,24px);color:#ffd23f;text-shadow:0 2px 12px rgba(0,0,0,.6)">Chúc mừng sinh nhật mẹ · Boong yêu mẹ</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showMute }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ toggleMusic }}" style="position:absolute;right:16px;bottom:16px;z-index:60;height:44px;padding:0 18px;border:0;border-radius:22px;background:rgba(255,247,236,.14);color:#fff7ec;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:600;cursor:pointer;backdrop-filter:blur(6px)" style-hover="background:rgba(255,247,236,.26)">{{ musicLabel }}</button>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;photoSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:10,&quot;min&quot;:3,&quot;max&quot;:20,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;startScene&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;start&quot;,&quot;greet&quot;,&quot;cake&quot;,&quot;photos&quot;],&quot;default&quot;:&quot;start&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { scene: 'start', opened: false, count: 3, titleText: '', showAge: false, lit: true, blown: false, wishText: '', wishDone: false, photos: [], idx: 0, playing: false };
+  audioRef = React.createRef();
+  canvasRef = React.createRef();
+  timers = [];
+  pieces = [];
+  rain = false;
+  TITLE = 'Chúc mừng sinh nhật Mẹ!';
+  WISH = 'Mẹ ơi, cảm ơn mẹ đã luôn ở bên Boong, lo cho Boong từng bữa ăn, từng giấc ngủ. Tuổi mới, Boong chúc mẹ thật nhiều sức khỏe, lúc nào cũng vui vẻ và bình an. Boong yêu mẹ nhiều lắm!';
+  COLORS = ['#ff5fa2', '#ffd23f', '#2ec4b6', '#ff8c42', '#b388ff', '#fff7ec'];
+
+  balloons = Array.from({ length: 12 }, (_, i) => {
+    const s = 56 + Math.random() * 30;
+    return { left: (i / 12 * 100 + Math.random() * 6) + '%', size: s + 'px', h: s * 1.22 + 'px', dur: (9 + Math.random() * 5).toFixed(1) + 's', delay: (Math.random() * 4).toFixed(1) + 's', color: this.COLORS[i % 5] };
+  });
+
+  t(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+
+  componentDidMount() {
+    this.initCanvas();
+    const s = this.props.startScene ?? 'start';
+    if (s === 'greet') this.startGreet();
+    else if (s === 'cake') this.startCake();
+    else if (s === 'photos') this.startPhotos();
+  }
+  componentWillUnmount() {
+    this.timers.forEach(clearTimeout);
+    clearInterval(this.slideTimer); clearInterval(this.scanTimer); clearInterval(this.typeTimer);
+    cancelAnimationFrame(this.raf);
+    window.removeEventListener('resize', this.resize);
+  }
+
+  initCanvas() {
+    const c = this.canvasRef.current; if (!c) return;
+    const ctx = c.getContext('2d');
+    this.resize = () => { const d = window.devicePixelRatio || 1; c.width = innerWidth * d; c.height = innerHeight * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
+    this.resize(); window.addEventListener('resize', this.resize);
+    const loop = () => {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      if (this.rain && Math.random() < 0.5) this.pieces.push(this.piece(Math.random() * innerWidth, -10, (Math.random() - .5) * 1, Math.random() * 2 + 1));
+      this.pieces = this.pieces.filter(p => p.y < innerHeight + 20);
+      for (const p of this.pieces) {
+        p.vy += 0.06; p.vx *= 0.99; p.x += p.vx + Math.sin(p.y / 30) * .4; p.y += p.vy; p.r += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+        if (p.round) { ctx.beginPath(); ctx.arc(0, 0, p.w / 2, 0, 7); ctx.fill(); } else ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.abs(Math.cos(p.r * 2)) + 1);
+        ctx.restore();
+      }
+      this.raf = requestAnimationFrame(loop);
+    };
+    loop();
+  }
+  piece(x, y, vx, vy) {
+    return { x, y, vx, vy: Math.min(vy, 3), r: Math.random() * 6, vr: (Math.random() - .5) * .3, w: 7 + Math.random() * 6, h: 10 + Math.random() * 8, c: this.COLORS[Math.floor(Math.random() * 6)], round: Math.random() < .25 };
+  }
+  burst(n) {
+    const cx = innerWidth / 2, cy = innerHeight * .55;
+    for (let i = 0; i < n; i++) { const a = Math.random() * Math.PI * 2, sp = 4 + Math.random() * 9; this.pieces.push({ ...this.piece(cx, cy, 0, 0), vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 6 }); }
+  }
+  type(key, full, speed, done) {
+    clearInterval(this.typeTimer);
+    let i = 0;
+    this.typeTimer = setInterval(() => {
+      i++; this.setState({ [key]: full.slice(0, i) });
+      if (i >= full.length) { clearInterval(this.typeTimer); done && done(); }
+    }, speed);
+  }
+
+  playMusic() { const a = this.audioRef.current; if (!a) return; a.volume = 0.8; a.play().then(() => this.setState({ playing: true })).catch(() => {}); }
+
+  openGift = () => {
+    if (this.state.opened) return;
+    this.setState({ opened: true });
+    this.playMusic();
+    this.burst(80);
+    this.t(() => this.setState({ scene: 'count', count: 3 }), 1300);
+    this.t(() => this.setState({ count: 2 }), 2300);
+    this.t(() => this.setState({ count: 1 }), 3300);
+    this.t(() => { this.burst(260); this.startGreet(); }, 4300);
+  };
+  startGreet() {
+    this.setState({ scene: 'greet', titleText: '', showAge: false });
+    this.rain = true;
+    this.t(() => this.type('titleText', this.TITLE, 90, () => this.t(() => { this.setState({ showAge: true }); this.burst(140); }, 400)), 500);
+    this.t(() => { this.rain = false; this.startCake(); }, 11000);
+  }
+  startCake() {
+    this.setState({ scene: 'cake', lit: true, blown: false, wishText: '', wishDone: false });
+    this.t(() => {
+      this.setState({ lit: false, blown: true }); this.burst(220);
+      this.t(() => this.type('wishText', this.WISH, 50, () => {
+        this.setState({ wishDone: true });
+        this.t(() => this.startPhotos(), 6000);
+      }), 900);
+    }, 5500);
+  }
+  startPhotos() {
+    this.setState({ scene: 'photos', idx: 0 });
+    this.scanPhotos();
+    this.scanTimer = setInterval(() => this.scanPhotos(), 30000);
+    const sec = this.props.photoSeconds ?? 10;
+    this.slideTimer = setInterval(() => { const n = this.state.photos.length; if (n > 1) this.setState(s => ({ idx: (s.idx + 1) % n })); }, sec * 1000);
+  }
+
+  loadImg(src) { return new Promise(r => { const im = new Image(); im.onload = () => r(true); im.onerror = () => r(false); im.src = src; }); }
+  async scanPhotos() {
+    if (this.picked) return;
+    const IMG = /\.(jpe?g|png|webp|gif|avif|bmp|heic)$/i;
+    const keys = new Set(), found = [];
+    const add = name => { let n; try { n = decodeURIComponent(name); } catch (e) { n = name; } if (!IMG.test(n) || keys.has(n)) return; keys.add(n); found.push('photos/' + encodeURIComponent(n)); };
+    // 1) Danh sách thư mục do máy chủ web trả về (Live Server, http.server, serve…)
+    try {
+      const r = await fetch('photos/', { cache: 'no-store' });
+      if (r.ok) { const txt = await r.text(); const re = /href="([^"?#]+)"/gi; let m;
+        while ((m = re.exec(txt))) { const h = m[1].replace(/\/$/, ''); if (IMG.test(h)) add(h.split('/').pop()); } }
+    } catch (e) {}
+    // 2) GitHub Pages: hỏi GitHub danh sách file trong photos/
+    if (!found.length && /\.github\.io$/.test(location.hostname)) {
+      try {
+        const user = location.hostname.split('.')[0], parts = location.pathname.split('/').filter(Boolean);
+        const repo = parts.length && !/\.html?$/.test(parts[0]) ? parts[0] : location.hostname;
+        const r = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/photos`);
+        if (r.ok) (await r.json()).forEach(f => add(f.name));
+      } catch (e) {}
+    }
+    // 3) Dự phòng: photos.json (nếu có)
+    if (!found.length) { try { const r = await fetch('photos/photos.json', { cache: 'no-store' }); if (r.ok) (await r.json()).forEach(add); } catch (e) {} }
+    found.sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }));
+    if (found.join('|') !== this.state.photos.join('|')) this.setState({ photos: found, idx: 0 });
+  }
+  pickFolder = e => {
+    const files = Array.from(e.target.files || []).filter(f => f.type.startsWith('image/')).sort((a, b) => a.name.localeCompare(b.name, 'vi', { numeric: true }));
+    if (!files.length) return;
+    this.picked = true;
+    this.setState({ photos: files.map(f => URL.createObjectURL(f)), idx: 0 });
+  }
+
+  toggleMusic = () => {
+    const a = this.audioRef.current; if (!a) return;
+    if (a.paused) this.playMusic(); else { a.pause(); this.setState({ playing: false }); }
+  };
+
+  renderVals() {
+    const s = this.state, sec = this.props.photoSeconds ?? 10;
+    return {
+      audioRef: this.audioRef, canvasRef: this.canvasRef,
+      isStart: s.scene === 'start',
+      isCount3: s.scene === 'count' && s.count === 3,
+      isCount2: s.scene === 'count' && s.count === 2,
+      isCount1: s.scene === 'count' && s.count === 1,
+      isGreet: s.scene === 'greet', isCake: s.scene === 'cake', isPhotos: s.scene === 'photos',
+      openGift: this.openGift,
+      giftAnim: s.opened ? 'none' : 'wobble 1.4s ease-in-out infinite',
+      lidTransform: s.opened ? 'translate(60px,-180px) rotate(35deg)' : 'none',
+      lidOpacity: s.opened ? 0 : 1,
+      balloons: this.balloons,
+      titleText: s.titleText, showAge: s.showAge,
+      candles: [{ left: '100px' }, { left: '143px' }, { left: '186px' }],
+      lit: s.lit, blown: s.blown, wishText: s.wishText, wishDone: s.wishDone,
+      slides: s.photos.map((src, i) => ({ src, op: i === s.idx ? 1 : 0, tf: i === s.idx ? 'scale(1.06)' : 'scale(1)', zoomDur: (sec + 2) + 's' })),
+      noPhotos: s.photos.length === 0, pickFolder: this.pickFolder,
+      showMute: s.scene !== 'start',
+      toggleMusic: this.toggleMusic,
+      musicLabel: s.playing ? 'Tắt nhạc' : 'Bật nhạc'
+    };
+  }
+}
+</script>
+</body>
+</html>
